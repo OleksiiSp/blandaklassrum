@@ -1,0 +1,426 @@
+/* 🦆 */
+
+/* @font-face {
+  font-family: '2-Questa_Regular';
+  src: url('2-Questa_Regular-webfont.woff2') format('woff2'),
+       url('2-Questa_Regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+} */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-variant-numeric: lining-nums;
+}
+
+:root {
+  --color-class-graph-bg: rgb(214, 238, 255);
+  --color-table: rgb(161, 175, 255);
+  --color-table-teacher: rgb(174, 158, 255);
+  --color-table-empty: rgb(191, 200, 255);
+  --color-column-border: rgb(123, 123, 255);
+  --color-button-shuffle: rgb(231, 178, 255);
+  --color-button-save: rgb(255, 250, 178);
+}
+
+
+.page.wrapper {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 5fr minmax(10%, 1fr);
+  grid-template-rows: 5fr 1fr;
+  gap: 0.3em;
+  grid-template-areas:  "classroom sidebar"
+                        "placements sidebar";
+
+  @media (max-width: 800px) {
+    /* Single col */
+
+    grid-template-rows: auto 1fr 2fr;
+    gap: 0;
+
+    /* So #classroom content doesn't overflow.
+    alt #classroom {max-width: 100vw} */
+    grid-template-columns: 100%;
+
+    grid-template-areas:  "classroom"
+                          "placements"
+                          "sidebar";
+
+  }
+}
+
+#classroom {
+  grid-area: classroom;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  & * {
+    transition: box-shadow 150ms;
+  }
+}
+
+#sidebar {
+  grid-area: sidebar;
+  background-color: rgb(235, 240, 253);
+}
+
+#placements {
+  grid-area: placements;
+  border-top: 0.3em rgb(164, 255, 240) dashed;
+  /* background-color: rgb(209, 255, 191); */
+}
+
+.buttons {
+  position: absolute;
+  bottom: -1em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  border: 0;
+  border-radius: 0.3em;
+  &:hover > div{
+    transform: scale(0.97);
+  }
+  &:active > div{
+    transform: scale(0.95);
+  }
+}
+
+#shuffle {
+  justify-self: center;
+  position: relative;
+  min-width: min-content;
+  min-height: min-content;
+  font-size: min(2em, 5vw);
+  height: 4rem;
+  width: min(12rem, 15vw);
+  background: var(--color-button-shuffle);
+  box-shadow: 0 3px 7px -1px rgb(134, 134, 134);
+  z-index: 1;
+  &:hover {
+    box-shadow: 0 3px 6px -2px rgb(134, 134, 134);
+  }
+  &:active {
+    background: rgb(219, 143, 255);
+    box-shadow: none;
+  }
+}
+
+#save {
+  position: absolute;
+  width: min-content;
+  bottom: 20%;
+  min-width: min-content;
+  max-width: 6em;
+  z-index: 0;
+  font-size: min(1.2em, 3vw);
+  padding: 0.3em 0.8em;
+  background-color: var(--color-button-save);
+  box-shadow: 0 3px 7px -1px rgb(134, 134, 134);
+  border-radius: 0 0.3em 0.3em 0;
+  &:hover {
+    box-shadow: 0 3px 6px -2px rgb(134, 134, 134);
+  }
+  &:active {
+    background: rgb(248, 255, 143);
+    box-shadow: none;
+  }
+  &.hidden {
+    display: none
+  }
+}
+
+.class.wrapper {
+  background-color: var(--color-class-graph-bg);
+  border-radius: 2em;
+  width: 90%;
+  height: 90%;
+  min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 800px) {
+  /* In single col layout, maintains the light-blue padding because there is space available */
+    padding: max(10vh, 8%) 0;
+  }
+}
+
+.class-graph {
+  display: flex;
+  gap: 3vw;
+
+  @media (max-width: 800px) {
+    gap: 1vw;
+  }
+}
+.column {
+  flex: 1;
+  display: grid;
+  gap: 3vh 0.2em;
+  grid-template-columns: repeat(2, min-content);
+  
+  /* Count of grid columns in the graph-column
+  this is set in HTML by JS */
+  
+  --col-count: attr(data-columns);
+  
+  &:nth-of-type(2) {
+    grid-template-columns: repeat(3, min-content);
+  }
+  @media (max-width: 800px) {
+    & {
+      grid-template-columns: repeat(2, min-content);
+      gap: 0.5vw;
+      /* for visibility: gaps no longer distinguish columns */
+      border: 0.2em solid var(--color-column-border);
+      border-radius: 0.7em;
+    }
+  }
+}
+
+.table, .class-list {
+  font-family: "Merriweather", serif;
+}
+
+.table {
+  box-sizing: border-box;
+  /* Limits aspect ratio */
+  height: min(9vh, 6vw);
+  min-width: 5em;
+  font-size: max(1.5vw, 1.1em);
+  font-variant-numeric: lining-nums;
+  background-color: var(--color-table);
+  border-radius: 0.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: 0 0.2em 0.4em -0.06em rgb(141, 141, 141);
+
+  &:hover {
+    box-shadow: 0 0.15em 0.4em -0.1em rgb(141, 141, 141);
+  }
+
+  &:focus-within {
+    box-shadow: none;
+    border: 0.1em solid var(--color-column-border);
+  }
+
+  & span {
+    text-align: center;
+    width: 100%;
+    max-width: 8.875rem;
+    max-height: 100%;
+    margin: auto;
+    padding: 0 0.7vw 0 0.7vw;
+    outline: none;
+    overflow: clip;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    font-size: 1.7vw;
+  }
+
+  @media (max-width: 800px) {
+    /* to do: cool corners */
+    & {
+      padding: 0;
+      min-width: 0;
+      border-radius: 0 0 0 0;
+      & span {
+        font-size: 2.6vw;
+      }
+    }
+  }
+
+  /* I placed these at the end because some browsers will discard the rest of a CSS rule after they encounter an unrecognised indented rule */
+
+  /* In case :blank is not supported, use this and download extra js */
+  /* :has() is not supported in Firefox 12/11/2023*/
+  &:has(span:empty) {
+    background-color: var(--color-table-empty);
+  }
+  &.empty {
+    box-shadow: 0 0.1em 0.5em -0.15em rgb(141, 141, 141);
+    background-color: var(--color-table-empty);
+  }
+  &.empty:hover {
+    box-shadow: 0 0.1em 0.5em -0.2em rgb(141, 141, 141);
+    background-color: var(--color-table-empty);
+  }
+  &.empty:focus-within {
+    box-shadow: none;
+    background-color: var(--color-table-empty);
+  }
+
+  /* Currently not supported --> 11/11/2023 */
+  /* When it is, it will be possible to grey out empty tables with CSS only */
+  /* https://developer.mozilla.org/en-US/docs/Web/CSS/:blank#browser_compatibility */
+  &:has(span:blank) {
+    background-color: var(--color-table-empty);
+  }
+}
+
+.teacher {
+  background-color: var(--color-table-teacher);
+  box-shadow: none;
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+.teacher p {
+  margin: 0;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: 1.5em;
+  font-family: "Agbalumo", cursive;
+}
+
+.class-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(auto-fit, 2.1em);
+  margin: 0;
+  padding: 0.2em;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.class-list li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  list-style: none;
+  padding: 1% 0;
+  padding-left: 0.3em;
+  background-color: #f3feff;
+  border-radius: 4px;
+  font-size: 1.1em;
+  margin: 0.1em;
+}
+
+/* .class-list li, .table span {
+  text-transform: capitalize;
+} */
+#placements {
+  padding: 0.5em;
+  display: flex;
+  gap: 0.3em;
+  overflow-x: auto;
+}
+
+.placement {
+  position: relative;
+  display: flex;
+  background-color: var(--color-class-graph-bg);
+}
+
+.controls {
+  box-sizing: border-box;
+  gap: 0.1em;
+  z-index: 1;
+  position: absolute;
+  right: 0;
+  margin: 0.1em;
+  display: flex;
+  opacity: 0;
+  *:hover > &, *:focus-within > & {
+    opacity: 1;
+  }
+  @media screen and (pointer: none) {
+    & {
+      opacity: 1;
+    }
+  }
+  & > button {
+    height: min-content;
+    padding: 0;
+    border: none;
+    border-radius: 10%;
+    background: white;
+    cursor: pointer;
+    position: relative;
+    & > img {
+      vertical-align: top;
+    }
+    &:focus {
+      z-index: 2;
+    }
+    &:hover {
+      background-color: rgb(206, 206, 206);
+    }
+    &:active {
+      background-color: rgb(97, 97, 97);
+    }
+  }
+}
+
+div.time {
+  box-sizing: border-box;
+  padding: 0 0.5em;
+  position: relative;
+  z-index: 0;
+  font-family: "Merriweather", sans-serif;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-evenly;
+  text-align: center;
+  font-size: 1em;
+  & * {
+    max-width: 6.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+time.time {
+  font-size:1.6rem
+}
+time.month-day:last-of-type {
+  font-size: 1.3em;
+}
+
+
+
+@media print {
+  #sidebar, #placements, .buttons {
+    display: none;
+  }
+  .page.wrapper {
+    all: unset;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (min-width: 800px) {
+    p {font-size: 2vmax;}
+  }
+  .class-graph {
+    gap: 2em;
+  }
+  .table {
+    border-radius: 2px;
+    border: 2px solid black;
+    box-shadow: none;
+    min-height: 10vmin;
+    & span {
+      max-width: fit-content;
+      font-size: calc(1em + 1vw);
+    }
+  }
+  .column {
+    border: none;
+  }
+}

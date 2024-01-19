@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klassrumsblandaren</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Agbalumo&family=Merriweather&display=swap" rel="stylesheet">
+  <script type="module" src="module.js" defer></script>
+  <script type="module" src="main.js" defer></script>
+</head>
+<body>
+  <div class="page wrapper">
+    <main id="classroom">
+      <div class="class wrapper">
+        <div class="table teacher"><p>Fröken</p></div>
+        <div class="class-graph">
+          <!-- p, pre etc. are block-level elements, so they generate a <br> after all content is removed which breaks :empty if it's in use instead of the unsupported :blank -->
+          <!-- contenteditable spans don't have this behaviour -->
+          <div class="column" data-columns="2">
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+          </div>
+          <div class="column" data-columns="3">
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+          </div>
+          <div class="column" data-columns="2">
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+            <div class="table"><span></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="buttons">
+        <div class="buttons-wrapper">
+          <button id="shuffle" class="button"><div>Blanda</div></button>
+          <button id="save" class="button"><div>Spara</div></button>
+        </div>
+      </div>
+    </main>
+    <aside id="sidebar">
+      <ul class="class-list"></ul>
+    </aside>
+    <aside id="placements"></aside>
+  </div>
+</body>
+</html>
